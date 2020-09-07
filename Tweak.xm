@@ -9,7 +9,7 @@
 #endif
 
 static int (*_ptraceHook)(int request, pid_t pid, caddr_t addr, int data);
-static int (*_syscall)(long request, long pid, long addr, long data);
+//static int (*_syscall)(long request, long pid, long addr, long data);
 
 static int $ptraceHook(int request, pid_t pid, caddr_t addr, int data) {
 	if (request == PT_DENY_ATTACH) {
@@ -18,14 +18,14 @@ static int $ptraceHook(int request, pid_t pid, caddr_t addr, int data) {
 	return _ptraceHook(request,pid,addr,data);
 }
 
-static int $syscall(long request, long pid, long addr, long data) {
-	if (request == sys_ptrace_request) {
-		return 0;
-	}
-	return _syscall(request,pid,addr,data);
-}
+//static int $syscall(long request, long pid, long addr, long data) {
+//	if (request == sys_ptrace_request) {
+//		return 0;
+//	}
+//	return _syscall(request,pid,addr,data);
+//}
 
 %ctor {
 	MSHookFunction((void *)MSFindSymbol(NULL,"_ptrace"), (void *)$ptraceHook, (void **)&_ptraceHook);
-	MSHookFunction((void *)MSFindSymbol(NULL,"_syscall"),(void *)$syscall,(void **)&_syscall);
+	//MSHookFunction((void *)MSFindSymbol(NULL,"_syscall"),(void *)$syscall,(void **)&_syscall);
 }
